@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -e
+
+docker-install -r -u -c postgresql php7-pgsql php7 nginx php7-fpm
+
+mkdir -p /run/nginx
+
+mkdir -p /usr/share/webapps/
+wget https://github.com/phppgadmin/phppgadmin/archive/master.tar.gz -q -O - | tar zxC /usr/share/webapps
+mv /usr/share/webapps/phppgadmin-master /usr/share/webapps/phppgadmin
+
+mkdir -p /conf.d /repo /conf.d/phppgadmin /conf.d/nginx
+touch /conf.d/phppgadmin/config.inc.php
+ln -s /conf.d/phppgadmin/config.inc.php /usr/share/webapps/phppgadmin/conf/config.inc.php
+touch /conf.d/nginx/phppgadmin.conf
+

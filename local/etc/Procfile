@@ -1,0 +1,3 @@
+nginx: nginx -c /conf.d/nginx/phppgadmin.conf -g "daemon off;"
+php-fpm: php-fpm -F
+postgres: su-exec postgres postgres -D ${POSTGRESQL_REPO:-/repo}
