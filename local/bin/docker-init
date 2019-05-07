@@ -2,7 +2,7 @@
 
 set -e
 
-docker-install -r -u -c postgresql php7-pgsql php7 nginx php7-fpm
+docker-install -r -u -c goreman su-exec postgresql php7-pgsql php7 nginx php7-fpm
 
 mkdir -p /run/nginx
 
