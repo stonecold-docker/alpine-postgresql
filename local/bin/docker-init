@@ -2,16 +2,33 @@
 
 set -e
 
-docker-install -r -u -c goreman su-exec postgresql php7-pgsql php7 nginx php7-fpm
+echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> Installing required packages"
+PKG_LIB="goreman su-exec postgresql php7-pgsql php7 nginx php7-fpm"
+PKG_DEV=""
+docker-install -r -u ${PKG_LIB} ${PKG_DEV}
+echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> OK"
+echo
 
+echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> Installing phppgadmin"
+mkdir -p /app
+cd /app
+wget --no-check-certificate -q -O - https://github.com/phppgadmin/phppgadmin/archive/master.tar.gz -q -O - | tar zx
+mv phppgadmin-* phppgadmin
+cd /
+echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> OK"
+echo
+
+echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> Uninstalling unnecessary packages"
+docker-install -d -c ${PKG_DEV}
+echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> OK"
+echo
+
+echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> Setting basic configurations"
 mkdir -p /run/nginx
-
-mkdir -p /usr/share/webapps/
-wget https://github.com/phppgadmin/phppgadmin/archive/master.tar.gz -q -O - | tar zxC /usr/share/webapps
-mv /usr/share/webapps/phppgadmin-master /usr/share/webapps/phppgadmin
-
 mkdir -p /conf.d /repo /conf.d/phppgadmin /conf.d/nginx
 touch /conf.d/phppgadmin/config.inc.php
-ln -s /conf.d/phppgadmin/config.inc.php /usr/share/webapps/phppgadmin/conf/config.inc.php
+ln -s /conf.d/phppgadmin/config.inc.php /app/phppgadmin/conf/config.inc.php
 touch /conf.d/nginx/phppgadmin.conf
+echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> OK"
+echo
 

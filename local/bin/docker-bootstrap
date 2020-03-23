@@ -13,10 +13,10 @@ mkdir -p /conf.d/phppgadmin /conf.d/nginx
 POSTGRESQL_REPO=${POSTGRESQL_REPO:-/repo}
 
 if [ ! -s /conf.d/phppgadmin/config.inc.php ]; then
-	sed -e "s/\(\$conf\['extra_login_security'\] = \).*$/\1 false;/g" /usr/share/webapps/phppgadmin/conf/config.inc.php-dist > /conf.d/phppgadmin/config.inc.php
+	sed -e "s/\(\$conf\['extra_login_security'\] = \).*$/\1 false;/g" /app/phppgadmin/conf/config.inc.php-dist > /conf.d/phppgadmin/config.inc.php
 
-	if [ "$(realpath /usr/share/webapps/phppgadmin/conf/config.inc.php)" != "/conf.d/phppgadmin/config.inc.php" ]; then
-		ln -sf /conf.d/phppgadmin/config.inc.php /usr/share/webapps/phppgadmin/conf/config.inc.php
+	if [ "$(realpath /app/phppgadmin/conf/config.inc.php)" != "/conf.d/phppgadmin/config.inc.php" ]; then
+		ln -sf /conf.d/phppgadmin/config.inc.php /app/phppgadmin/conf/config.inc.php
 	fi
 fi
 
@@ -114,7 +114,7 @@ http {
 
 		server_name	localhost;
 
-		root	/usr/share/webapps/phppgadmin;
+		root	/app/phppgadmin;
 		index	index.php;
 
 		location ~ \.php$ {
