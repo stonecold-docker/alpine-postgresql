@@ -138,7 +138,7 @@ if [ ! -e ${POSTGRESQL_REPO}/base ]; then
 echo > /dev/null
 EOF
 	chmod 755 /usr/local/bin/locale
-	su-exec postgres initdb -D ${POSTGRESQL_REPO}
+	su-exec postgres pg_ctl initdb -D ${POSTGRESQL_REPO}
 	rm -rf /usr/local/bin/locale
 fi
 
