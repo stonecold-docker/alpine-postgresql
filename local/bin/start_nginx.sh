@@ -1,4 +1,4 @@
 #!/bin/sh
 
-exec nginx -c /conf.d/nginx/phppgadmin.conf -g "daemon off;"
+exec nginx -g "daemon off;"
 

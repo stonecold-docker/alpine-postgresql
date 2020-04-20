@@ -1,4 +1,4 @@
 #!/bin/sh
 
-exec php-fpm -F
+exec php-fpm7 -F
 

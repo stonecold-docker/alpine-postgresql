@@ -3,9 +3,18 @@
 set -e
 
 echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> Installing required packages"
-PKG_LIB="goreman su-exec postgresql php7-pgsql php7 nginx php7-fpm"
+USE_NGINX="${USE_NGINX:-N}"
+PKG_LIB="goreman su-exec postgresql php7-pgsql php7-session php7-mbstring"
+if [ "${USE_NGINX}" = "Y" ]; then
+	PKG_LIB="${PKG_LIB} nginx php7-fpm"
+else
+	PKG_LIB="${PKG_LIB} php7"
+fi
 PKG_DEV=""
 docker-install -r -u ${PKG_LIB} ${PKG_DEV}
+if [ "${USE_NGINX}" = "Y" ]; then
+	mkdir -p /run/nginx
+fi
 echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> OK"
 echo
 
@@ -24,11 +33,30 @@ echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> OK"
 echo
 
 echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> Setting basic configurations"
-mkdir -p /run/nginx
+if [ "${USE_NGINX}" = "Y" ]; then
+	rm -rf /etc/nginx/conf.d/default.conf
+	ln -sf /usr/local/etc/nginx-phppgadmin.conf /etc/nginx/conf.d/
+else
+	rm -rf /usr/local/bin/start_nginx.sh /usr/local/bin/start_fpm.sh /usr/local/etc/nginx-phppgadmin.conf
+	sed -i -e '/nginx/d' /usr/local/etc/Procfile
+	sed -i -e '/php-fpm7/d' /usr/local/etc/Procfile
+	echo "phppgadmin: /usr/local/bin/start_phppgadmin.sh" >> /usr/local/etc/Procfile
+	cat << EOF > /usr/local/bin/start_phppgadmin.sh
+#!/bin/sh
+
+cd /app/phppgadmin
+
+exec php7 -S 0.0.0.0:5480
+
+EOF
+	chmod 755 /usr/local/bin/start_phppgadmin.sh
+fi
+
 mkdir -p /conf.d /repo /conf.d/phppgadmin /conf.d/nginx
 touch /conf.d/phppgadmin/config.inc.php
 ln -s /conf.d/phppgadmin/config.inc.php /app/phppgadmin/conf/config.inc.php
-touch /conf.d/nginx/phppgadmin.conf
+mkdir -p /run/postgresql
+chown postgres:postgres /run/postgresql
 echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> OK"
 echo
 
