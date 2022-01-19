@@ -6,10 +6,8 @@
 
 ----------------------------------------
 ### x64
-![Docker Image Version](https://img.shields.io/docker/v/forumi0721/alpine-postgresql/x64)
 ![Docker Image Size](https://img.shields.io/docker/image-size/forumi0721/alpine-postgresql/x64)
 ### aarch64
-![Docker Image Version](https://img.shields.io/docker/v/forumi0721/alpine-postgresql/aarch64)
 ![Docker Image Size](https://img.shields.io/docker/image-size/forumi0721/alpine-postgresql/aarch64)
 
 
