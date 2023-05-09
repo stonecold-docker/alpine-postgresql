@@ -4,11 +4,11 @@ set -e
 
 echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> Installing required packages"
 USE_NGINX="${USE_NGINX:-N}"
-PKG_LIB="goreman su-exec postgresql php7-pgsql php7-session php7-mbstring"
+PKG_LIB="goreman su-exec postgresql php8-pgsql php8-session php8-mbstring"
 if [ "${USE_NGINX}" = "Y" ]; then
-	PKG_LIB="${PKG_LIB} nginx php7-fpm"
+	PKG_LIB="${PKG_LIB} nginx php8-fpm"
 else
-	PKG_LIB="${PKG_LIB} php7"
+	PKG_LIB="${PKG_LIB} php8"
 fi
 PKG_DEV=""
 docker-install -r -u ${PKG_LIB} ${PKG_DEV}
@@ -46,7 +46,7 @@ else
 
 cd /app/phppgadmin
 
-exec php7 -S 0.0.0.0:5480
+exec php8 -S 0.0.0.0:5480
 
 EOF
 	chmod 755 /usr/local/bin/start_phppgadmin.sh
