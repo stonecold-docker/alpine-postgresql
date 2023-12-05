@@ -39,7 +39,7 @@ if [ "${USE_NGINX}" = "Y" ]; then
 else
 	rm -rf /usr/local/bin/start_nginx.sh /usr/local/bin/start_fpm.sh /usr/local/etc/nginx-phppgadmin.conf
 	sed -i -e '/nginx/d' /usr/local/etc/Procfile
-	sed -i -e '/php-fpm7/d' /usr/local/etc/Procfile
+	sed -i -e '/php-fpm/d' /usr/local/etc/Procfile
 	echo "phppgadmin: /usr/local/bin/start_phppgadmin.sh" >> /usr/local/etc/Procfile
 	cat << EOF > /usr/local/bin/start_phppgadmin.sh
 #!/bin/sh
