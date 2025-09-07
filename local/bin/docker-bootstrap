@@ -32,6 +32,10 @@ echo > /dev/null
 EOF
 	chmod 755 /usr/local/bin/locale
 	su-exec postgres pg_ctl initdb -D ${POSTGRESQL_REPO}
+	su-exec postgres postgres -D ${POSTGRESQL_REPO} &
+	sleep 1
+	su-exec postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"
+	su-exec postgres pg_ctl stop -D ${POSTGRESQL_REPO}
 	rm -rf /usr/local/bin/locale
 fi
 
