@@ -4,11 +4,12 @@ set -e
 
 echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> Installing required packages"
 USE_NGINX="${USE_NGINX:-N}"
-PKG_LIB="goreman su-exec postgresql php83-pgsql php83-session php83-mbstring"
+PHP_VERSION=85
+PKG_LIB="goreman su-exec postgresql postgresql-pgvector php${PHP_VERSION}-pgsql php${PHP_VERSION}-session php${PHP_VERSION}-mbstring"
 if [ "${USE_NGINX}" = "Y" ]; then
-	PKG_LIB="${PKG_LIB} nginx php83-fpm"
+	PKG_LIB="${PKG_LIB} nginx php${PHP_VERSION}-fpm"
 else
-	PKG_LIB="${PKG_LIB} php83"
+	PKG_LIB="${PKG_LIB} php${PHP_VERSION}"
 fi
 PKG_DEV=""
 docker-install -r -u ${PKG_LIB} ${PKG_DEV}
