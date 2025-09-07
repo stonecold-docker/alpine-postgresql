@@ -47,7 +47,7 @@ else
 
 cd /app/phppgadmin
 
-exec php83 -S 0.0.0.0:5480
+exec php${PHP_VERSION} -S 0.0.0.0:5480
 
 EOF
 	chmod 755 /usr/local/bin/start_phppgadmin.sh
