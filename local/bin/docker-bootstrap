@@ -8,17 +8,17 @@ fi
 
 touch /.init
 
-mkdir -p /conf.d/phppgadmin
+#mkdir -p /conf.d/phppgadmin
 
 POSTGRESQL_REPO=${POSTGRESQL_REPO:-/repo}
 
-if [ ! -s /conf.d/phppgadmin/config.inc.php ]; then
-	sed -e "s/\(\$conf\['extra_login_security'\] = \).*$/\1 false;/g" /app/phppgadmin/conf/config.inc.php-dist > /conf.d/phppgadmin/config.inc.php
-
-	if [ "$(realpath /app/phppgadmin/conf/config.inc.php)" != "/conf.d/phppgadmin/config.inc.php" ]; then
-		ln -sf /conf.d/phppgadmin/config.inc.php /app/phppgadmin/conf/config.inc.php
-	fi
-fi
+#if [ ! -s /conf.d/phppgadmin/config.inc.php ]; then
+#	sed -e "s/\(\$conf\['extra_login_security'\] = \).*$/\1 false;/g" /app/phppgadmin/conf/config.inc.php-dist > /conf.d/phppgadmin/config.inc.php
+#
+#	if [ "$(realpath /app/phppgadmin/conf/config.inc.php)" != "/conf.d/phppgadmin/config.inc.php" ]; then
+#		ln -sf /conf.d/phppgadmin/config.inc.php /app/phppgadmin/conf/config.inc.php
+#	fi
+#fi
 
 
 chown -R postgres:postgres ${POSTGRESQL_REPO}

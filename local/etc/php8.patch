@@ -1,0 +1,29 @@
+diff --git a/all_db.php b/all_db.php
+index 3368bab..b63fe45 100644
+--- a/all_db.php
++++ b/all_db.php
+@@ -199,7 +199,7 @@
+ 		echo "\t\t<td class=\"data1\">\n";
+ 		echo "\t\t\t<select name=\"formEncoding\">\n";
+ 		echo "\t\t\t\t<option value=\"\"></option>\n";
+-		while (list ($key) = each ($data->codemap)) {
++		foreach ($data->codemap as $key => $value) {
+ 		    echo "\t\t\t\t<option value=\"", htmlspecialchars($key), "\"",
+ 				($key == $_POST['formEncoding']) ? ' selected="selected"' : '', ">",
+ 				$misc->printVal($key), "</option>\n";
+diff --git a/libraries/adodb/drivers/adodb-postgres64.inc.php b/libraries/adodb/drivers/adodb-postgres64.inc.php
+index 7b838a8..7a22f85 100644
+--- a/libraries/adodb/drivers/adodb-postgres64.inc.php
++++ b/libraries/adodb/drivers/adodb-postgres64.inc.php
+@@ -122,6 +122,11 @@ WHERE relkind in ('r','v') AND (c.relname='%s' or c.relname = lower('%s'))
+ 	// changes the metaColumnsSQL, adds columns: attnum[6]
+ 	}
+ 	
++	function __construct()
++	{
++	// changes the metaColumnsSQL, adds columns: attnum[6]
++	}
++
+ 	function ServerInfo()
+ 	{
+ 		if (isset($this->version)) return $this->version;

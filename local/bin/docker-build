@@ -11,7 +11,7 @@ if [ "${USE_NGINX}" = "Y" ]; then
 else
 	PKG_LIB="${PKG_LIB} php${PHP_VERSION}"
 fi
-PKG_DEV=""
+PKG_DEV="patch"
 docker-install -r -u ${PKG_LIB} ${PKG_DEV}
 if [ "${USE_NGINX}" = "Y" ]; then
 	mkdir -p /run/nginx
@@ -19,11 +19,22 @@ fi
 echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> OK"
 echo
 
-echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> Installing phppgadmin"
-mkdir -p /app
-cd /app
-wget --no-check-certificate -q -O - https://github.com/phppgadmin/phppgadmin/archive/master.tar.gz -q -O - | tar zx
-mv phppgadmin-* phppgadmin
+#echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> Installing phppgadmin"
+#mkdir -p /app
+#cd /app
+#wget --no-check-certificate -q -O - https://github.com/phppgadmin/phppgadmin/archive/master.tar.gz -q -O - | tar zx
+#mv phppgadmin-* phppgadmin
+#cd phppgadmin
+#patch -p1 < /usr/local/etc/php8.patch
+#cd /
+#echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> OK"
+#echo
+echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> Installing adminer"
+mkdir -p /app/adminer
+cd /app/adminer
+download_url="$(wget --no-check-certificate -q -O - https://api.github.com/repos/vrana/adminer/releases  | grep '^.*"browser_download_url": ".*/adminer-.*.php"$' | head -1 | sed -e 's/^.*"browser_download_url": "\(.*\)"$/\1/g')"
+wget --no-check-certificate -q "${download_url}"
+ln -s adminer-*.php index.php
 cd /
 echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> OK"
 echo
@@ -36,26 +47,43 @@ echo
 echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> Setting basic configurations"
 if [ "${USE_NGINX}" = "Y" ]; then
 	rm -rf /etc/nginx/conf.d/default.conf
-	ln -sf /usr/local/etc/nginx-phppgadmin.conf /etc/nginx/conf.d/
+	rm -rf /usr/local/etc/nginx-phppgadmin.conf
+	#ln -sf /usr/local/etc/nginx-phppgadmin.conf /etc/nginx/conf.d/
+	ln -sf /usr/local/etc/nginx-adminer.conf /etc/nginx/conf.d/
 else
-	rm -rf /usr/local/bin/start_nginx.sh /usr/local/bin/start_fpm.sh /usr/local/etc/nginx-phppgadmin.conf
+	#rm -rf /usr/local/bin/start_nginx.sh /usr/local/bin/start_fpm.sh /usr/local/etc/nginx-phppgadmin.conf
+	rm -rf /usr/local/bin/start_nginx.sh /usr/local/bin/start_fpm.sh /usr/local/etc/nginx-phppgadmin.conf /usr/local/etc/nginx-adminer.conf
 	sed -i -e '/nginx/d' /usr/local/etc/Procfile
 	sed -i -e '/php-fpm/d' /usr/local/etc/Procfile
-	echo "phppgadmin: /usr/local/bin/start_phppgadmin.sh" >> /usr/local/etc/Procfile
-	cat << EOF > /usr/local/bin/start_phppgadmin.sh
+	#echo "phppgadmin: /usr/local/bin/start_phppgadmin.sh" >> /usr/local/etc/Procfile
+	#cat << EOF > /usr/local/bin/start_phppgadmin.sh
+##!/bin/sh
+#
+#cd /app/phppgadmin
+#
+#exec php${PHP_VERSION} -S 0.0.0.0:5480
+#
+#EOF
+	#chmod 755 /usr/local/bin/start_phppgadmin.sh
+	echo "adminer: /usr/local/bin/start_adminer.sh" >> /usr/local/etc/Procfile
+	cat << EOF > /usr/local/bin/start_adminer.sh
 #!/bin/sh
 
-cd /app/phppgadmin
+cd /app/adminer
 
 exec php${PHP_VERSION} -S 0.0.0.0:5480
 
 EOF
-	chmod 755 /usr/local/bin/start_phppgadmin.sh
+	chmod 755 /usr/local/bin/start_adminer.sh
 fi
 
-mkdir -p /conf.d /repo /conf.d/phppgadmin /conf.d/nginx
-touch /conf.d/phppgadmin/config.inc.php
-ln -s /conf.d/phppgadmin/config.inc.php /app/phppgadmin/conf/config.inc.php
+#mkdir -p /conf.d /repo /conf.d/phppgadmin /conf.d/nginx
+mkdir -p /conf.d /repo 
+if [ "${USE_NGINX}" = "Y" ]; then
+	mkdir -p /conf.d/nginx
+fi
+#touch /conf.d/phppgadmin/config.inc.php
+#ln -s /conf.d/phppgadmin/config.inc.php /app/phppgadmin/conf/config.inc.php
 mkdir -p /run/postgresql
 chown postgres:postgres /run/postgresql
 echo "[$(TZ="GMT-9" date '+%Y-%m-%d %H:%M:%S')] ==> OK"
