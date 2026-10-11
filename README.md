@@ -5,10 +5,10 @@
 
 
 ----------------------------------------
-### x64
-![Docker Image Size](https://img.shields.io/docker/image-size/forumi0721/alpine-postgresql/x64)
-### aarch64
-![Docker Image Size](https://img.shields.io/docker/image-size/forumi0721/alpine-postgresql/aarch64)
+### amd64
+![Docker Image Size (tag)](https://img.shields.io/docker/image-size/forumi0721/alpine-postgresql/latest?arch=amd64)
+### arm64
+![Docker Image Size (tag)](https://img.shields.io/docker/image-size/forumi0721/alpine-postgresql/latest?arch=arm64)
 
 
 
@@ -16,8 +16,8 @@
 #### Description
 
 * Distribution : [Alpine Linux](https://alpinelinux.org/)
-* Architecture : x64,aarch64
-* Appplication : [PostgreSQL](https://www.postgresql.org/) [phpPgAdmin](http://phppgadmin.sourceforge.net/)
+* Architecture : amd64, arm64
+* Application : [PostgreSQL](https://www.postgresql.org/) [phpPgAdmin](http://phppgadmin.sourceforge.net/)
     - PostgreSQL is a powerful, open source object-relational database system.
     - phpPgAdmin is a web-based administration tool for PostgreSQL.
 
@@ -31,7 +31,7 @@ docker run -d \
            -p 5432:5432/tcp \
            -p 5480:5480/tcp \
            -v /repo:/repo \
-           forumi0721/alpine-postgresql:[ARCH_TAG]
+           forumi0721/alpine-postgresql:latest
 ```
 
 
